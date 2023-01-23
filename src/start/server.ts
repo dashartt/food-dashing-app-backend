@@ -7,7 +7,7 @@ const appPort = parseInt(process.env.APP_PORT as string) as number
 const socketPort = parseInt(process.env.SOCKET_PORT as string) as number
 const mongoUrl = process.env.MONGO_URL as string
 
-app.listen(appPort, () => {
+app.listen(appPort, '0.0.0.0', () => {
   console.log('\x1b[33m%s\x1b[0m', `=> Server running on the port: ${appPort}`)
 })
 
