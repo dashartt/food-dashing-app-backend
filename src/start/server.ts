@@ -18,6 +18,7 @@ connectDb(MONGO_UL)
   .then(() => console.log('\x1b[33m%s\x1b[0m', `=> Database connected`))
   .catch(() => {
     console.log('\x1b[33m%s\x1b[0m', `=> Database not connected`)
+
     console.log('\x1b[33m%s\x1b[0m', `=> Server and socket io will close`)
     process.exit(0)
   })
