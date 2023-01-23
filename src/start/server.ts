@@ -3,7 +3,7 @@ import { connect as connectDb } from 'mongoose'
 import app from './app'
 import serverIo from '../start/io'
 
-const appPort = parseInt(process.env.APP_PORT as string) as number
+const appPort = parseInt(process.env.PORT as string) as number
 const socketPort = parseInt(process.env.SOCKET_PORT as string) as number
 const mongoUrl = process.env.MONGO_URL as string
 
