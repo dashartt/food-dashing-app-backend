@@ -11,6 +11,10 @@ app.use(express.urlencoded({ extended: false }))
 app.use(routes)
 // Routes ----------------------->
 
+app.get('/', (req: Request, res: Response) =>
+  res.status(200).json({ message: 'hello world' })
+)
+
 // Error Middleware  ----------------------->
 app.use((err: Errback, req: Request, res: Response, next: NextFunction) => {
   return res.status(500).json({ message: 'Internal Error' })
