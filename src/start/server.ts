@@ -3,9 +3,9 @@ import { connect as connectDb } from 'mongoose'
 import app from './app'
 import serverIo from '../start/io'
 
-const appPort = parseInt(process.env.APP_PORT as string) || 3001
-const socketPort = parseInt(process.env.SOCKET_PORT as string) || 3002
-const mongoUrl = process.env.MONGO_URL || 'mongodb://172.17.0.2:27017/pizzaria'
+const appPort = parseInt(process.env.APP_PORT as string) as number
+const socketPort = parseInt(process.env.SOCKET_PORT as string) as number
+const mongoUrl = process.env.MONGO_URL as string
 
 connectDb(mongoUrl)
   .then(() => {
