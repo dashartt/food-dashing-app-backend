@@ -17,8 +17,7 @@ app.use(routes)
 // Routes ----------------------->
 
 app.get('/', async (req: Request, res: Response) => {
-  const items = await MenuItemModel.find({})
-  res.status(200).json({ items })
+  return res.status(200).json({ message: 'server is alive' })
 })
 
 // Error Middleware  ----------------------->
