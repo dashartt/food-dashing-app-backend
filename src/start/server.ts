@@ -1,27 +1,26 @@
 import 'dotenv/config'
-import app from './app'
-import serverIo from '../start/io'
+import serverWithSocket from '../start/io'
 import mongodb from './database'
 
-const appPort = parseInt(process.env.PORT as string) as number
-const socketPort = parseInt(process.env.SOCKET_PORT as string) as number
+const port = parseInt(process.env.PORT as string) as number
 
-app.listen(appPort, '0.0.0.0', () => {
-  console.log('\x1b[33m%s\x1b[0m', `=> Server running on the port: ${appPort}`)
-})
-
-serverIo.listen(socketPort, () =>
+serverWithSocket.listen(port, () => {
   console.log(
     '\x1b[33m%s\x1b[0m',
-    `=> Socket-io running on the port: ${socketPort}`
+    `=> Server and Socket-io running on the port: ${port}`
   )
-)
+  const host = serverWithSocket.address().address
+  const port_ = serverWithSocket.address().port
+  console.log(host, ':', port_)
+})
 
 mongodb
   .then(() => {
     console.log('\x1b[33m%s\x1b[0m', `=> Database connected`)
   })
-  .catch(() => {
+  .catch((error) => {
+    console.log('\x1b[33m%s\x1b[0m', error)
+
     console.log('\x1b[33m%s\x1b[0m', `=> Database not connected`)
     console.log('\x1b[33m%s\x1b[0m', `=> Server and socket io will close`)
     process.exit(0)
