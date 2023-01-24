@@ -1,11 +1,10 @@
 import 'dotenv/config'
-import { connect as connectDb } from 'mongoose'
 import app from './app'
 import serverIo from '../start/io'
+import mongodb from './database'
 
 const appPort = parseInt(process.env.PORT as string) as number
 const socketPort = parseInt(process.env.SOCKET_PORT as string) as number
-const mongoUrl = process.env.MONGO_URL as string
 
 app.listen(appPort, '0.0.0.0', () => {
   console.log('\x1b[33m%s\x1b[0m', `=> Server running on the port: ${appPort}`)
@@ -18,8 +17,10 @@ serverIo.listen(socketPort, () =>
   )
 )
 
-connectDb(mongoUrl)
-  .then(() => console.log('\x1b[33m%s\x1b[0m', `=> Database connected`))
+mongodb
+  .then(() => {
+    console.log('\x1b[33m%s\x1b[0m', `=> Database connected`)
+  })
   .catch(() => {
     console.log('\x1b[33m%s\x1b[0m', `=> Database not connected`)
     console.log('\x1b[33m%s\x1b[0m', `=> Server and socket io will close`)
