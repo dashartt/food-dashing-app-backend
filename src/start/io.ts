@@ -1,12 +1,12 @@
 import { ObjectId } from 'mongodb'
 import { Socket } from 'socket.io'
+import app from './app'
+import http from 'http'
+import socketio from 'socket.io'
 
-const app = require('./app')
-const http = require('http')
-const socketIo = require('socket.io')
 const server = http.createServer(app)
 
-export const io: Socket = socketIo(server, {
+export const io = new socketio.Server(server, {
   cors: {
     origin: '*',
   },
@@ -19,10 +19,9 @@ export const notifyNewOrder = (orderId: ObjectId | string) => {
 io.on('connection', (socket: Socket) => {
   console.log('New client connected | id', socket.id)
 
-  socket.on('frontend-msg', (msg) => {
+  socket.on('ping', (msg) => {
     console.log(msg)
   })
-  socket.emit('backend-msg', 'backend-ping')
 
   socket.on('disconnect', () => {
     console.log('Client disconnected')
