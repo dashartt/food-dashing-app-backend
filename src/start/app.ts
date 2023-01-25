@@ -1,9 +1,13 @@
 import cors from 'cors'
 import express, { Errback, NextFunction, Request, Response } from 'express'
-import MenuItemModel from '../database/models/menuItem.model'
 import routes from '../routes'
 
 const app = express()
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  next()
+})
 
 // Server Configs  ----------------------->
 app.use(

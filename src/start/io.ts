@@ -9,6 +9,7 @@ const server = http.createServer(app)
 export const io = new socketio.Server(server, {
   cors: {
     origin: '*',
+    methods: ['GET', 'POST'],
   },
 })
 
