@@ -12,6 +12,9 @@ export const updateOrderStatus = async (
   const status = req.query.status as string
 
   await orderRepository.updateOrderStatus(_id, status)
+
+  io.notifyUpdateOrderStatus(_id, status)
+
   res.status(200).end()
 }
 

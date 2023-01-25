@@ -14,17 +14,19 @@ export const io = new socketio.Server(server, {
 
 export const notifyNewOrder = (orderId: ObjectId | string) => {
   io.emit('new-order', orderId)
+  console.log('[EMIT] => NEW ORDER', orderId)
+}
+
+export const notifyUpdateOrderStatus = (orderId: string, status: string) => {
+  io.emit('update-status-order', status)
+  console.log('[EMIT] => UPDATE STATUS ORDER', orderId)
 }
 
 io.on('connection', (socket: Socket) => {
-  console.log('New client connected | id', socket.id)
-
-  socket.on('ping', (msg) => {
-    console.log(msg)
-  })
+  console.log('[CONNECTED] => ', socket.id)
 
   socket.on('disconnect', () => {
-    console.log('Client disconnected')
+    console.log('[DISCONNECTED] => ', socket.id)
   })
 })
 
