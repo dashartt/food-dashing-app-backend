@@ -5,18 +5,17 @@ import routes from '../routes'
 
 // Constans ------------------------------>
 const ENV = process.env.NODE_ENV || 'dev'
-const PORT = process.env.PORT || 3003
-const HOST =
+const FRONTEND_URL =
   ENV === 'dev'
-    ? `http://localhost:${PORT}`
-    : 'https://macacoloucopizzaria-backend.vercel.app'
+    ? `http://localhost:3000`
+    : 'https://macacoloucopizzaria.vercel.app'
 
 // Initialize server ----------------------->
 const app = express()
 const server = http.createServer(app)
 export const io = new Server(server, {
   cors: {
-    origin: HOST,
+    origin: FRONTEND_URL,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   },
@@ -33,7 +32,7 @@ io.on('connection', (socket: Socket) => {
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.header('Access-Control-Allow-Origin', HOST)
+  res.header('Access-Control-Allow-Origin', FRONTEND_URL)
   next()
 })
 
