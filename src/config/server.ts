@@ -1,5 +1,6 @@
 import express, { Errback, NextFunction, Request, Response } from 'express'
 import http from 'http'
+import Pusher from 'pusher'
 import cors from 'cors'
 import { Server, Socket } from 'socket.io'
 import routes from '../routes'
@@ -13,6 +14,13 @@ const FRONTEND_URL =
 
 // Initialize server ----------------------->
 const app = express()
+export const pusher = new Pusher({
+  appId: process.env.PUSHER_ID as string,
+  key: process.env.PUSHER_KEY as string,
+  secret: process.env.PUSHER_SECRET as string,
+  cluster: process.env.PUSHER_CLUSTER as string,
+  useTLS: true,
+})
 const server = http.createServer(app)
 export const io = new Server(server, {
   cors: {

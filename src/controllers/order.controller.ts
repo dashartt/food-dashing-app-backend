@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import * as orderRepository from '../repositories/order.repository'
-import * as io from '../events'
+
 import { IOrder } from '../types'
+import { pusher } from '../config/server'
 
 export const updateOrderStatus = async (
   req: Request,
@@ -13,7 +14,7 @@ export const updateOrderStatus = async (
 
   await orderRepository.updateOrderStatus(_id, status)
 
-  io.notifyUpdateOrderStatus(_id, status)
+  await pusher.trigger('client', 'update-order-status', status)
 
   res.status(200).end()
 }
@@ -66,7 +67,7 @@ export const addOrder = async (
 
   if (!orderId) return next(0)
 
-  io.notifyNewOrder(orderId)
+  await pusher.trigger('admin', 'new-order', orderId)
 
   res.status(200).json({ orderId })
 }
