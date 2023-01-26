@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import * as orderRepository from '../repositories/order.repository'
-import * as io from '../start/io'
+import * as io from '../events'
 import { IOrder } from '../types'
 
 export const updateOrderStatus = async (

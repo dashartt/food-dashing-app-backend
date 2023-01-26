@@ -1,9 +1,9 @@
 {
-  "main": "./build/start/server.js",
+  "main": "./build/src/index.js",
   "scripts": {
     "build": "rimraf ./build && tsc",
-    "start": "node ./build/src/start/server.js",
-    "dev": "ts-node-dev --respawn --transpile-only --inspect -- ./src/start/server.ts",
+    "start": "node ./build/src/index.js",
+    "dev": "ts-node-dev --respawn --transpile-only --inspect -- ./src/index.ts",
     "lint": "eslint --fix --ext .js,.ts,.json .",
     "test": "jest"
   },
