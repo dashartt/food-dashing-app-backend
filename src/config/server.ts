@@ -1,5 +1,6 @@
 import express, { Errback, NextFunction, Request, Response } from 'express'
 import http from 'http'
+import cors from 'cors'
 import { Server, Socket } from 'socket.io'
 import routes from '../routes'
 
@@ -16,8 +17,6 @@ const server = http.createServer(app)
 export const io = new Server(server, {
   cors: {
     origin: FRONTEND_URL,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    credentials: true,
   },
 })
 io.on('connection', (socket: Socket) => {
@@ -30,6 +29,11 @@ io.on('connection', (socket: Socket) => {
 
 // Config ----------------------->
 app.use(express.json())
+app.use(
+  cors({
+    origin: FRONTEND_URL,
+  })
+)
 app.use(express.urlencoded({ extended: false }))
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.header('Access-Control-Allow-Origin', FRONTEND_URL)
