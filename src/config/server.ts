@@ -1,9 +1,7 @@
 import express, { Errback, NextFunction, Request, Response } from 'express'
-import http from 'http'
 import Pusher from 'pusher'
 import PushNotifications from '@pusher/push-notifications-server'
 import cors from 'cors'
-import { Server, Socket } from 'socket.io'
 import routes from '../routes'
 
 // Constans ------------------------------>
@@ -13,7 +11,7 @@ const FRONTEND_URL =
     ? `http://localhost:3000`
     : 'https://macacoloucopizzaria.vercel.app'
 
-// Initialize server ----------------------->
+// Initialize ----------------------->
 const app = express()
 export const pusher = new Pusher({
   appId: process.env.PUSHER_ID as string,
@@ -25,20 +23,6 @@ export const pusher = new Pusher({
 export const beamsClient = new PushNotifications({
   instanceId: process.env.BEAM_ID as string,
   secretKey: process.env.BEAM_KEY as string,
-})
-
-const server = http.createServer(app)
-export const io = new Server(server, {
-  cors: {
-    origin: FRONTEND_URL,
-  },
-})
-io.on('connection', (socket: Socket) => {
-  console.log('[CONNECTED] => ', socket.id)
-
-  socket.on('disconnect', () => {
-    console.log('[DISCONNECTED] => ', socket.id)
-  })
 })
 
 // Config ----------------------->
@@ -66,4 +50,4 @@ app.use((err: Errback, req: Request, res: Response, next: NextFunction) => {
 })
 
 // Export Server  ----------------------->
-export default server
+export default app
