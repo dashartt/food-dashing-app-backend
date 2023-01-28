@@ -47,6 +47,12 @@ export const getClientOrders = async (clientId: string) => {
       clientId,
     })
       .populate({
+        path: 'clientId',
+      })
+      .populate({
+        path: 'addressId',
+      })
+      .populate({
         path: 'orderItemsId',
         populate: {
           path: 'itemIds',
@@ -66,6 +72,12 @@ export const getClientOrders = async (clientId: string) => {
 export const getOrders = async () => {
   try {
     const orders = OrderModel.find({})
+      .populate({
+        path: 'clientId',
+      })
+      .populate({
+        path: 'addressId',
+      })
       .populate({
         path: 'orderItemsId',
         populate: {
