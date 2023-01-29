@@ -62,8 +62,8 @@ export interface IOrder {
 }
 
 export interface IOrderSearchParams {
-  today: boolean
-  status: string
+  today?: boolean
+  status?: string
 }
 
 declare global {

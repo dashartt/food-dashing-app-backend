@@ -1,3 +1,4 @@
+import moment from 'moment'
 import OrderModel from '../database/models/order.model'
 import { IOrder, IOrderSearchParams } from '../types'
 
@@ -70,14 +71,19 @@ export const getClientOrders = async (clientId: string) => {
 }
 
 export const getOrders = async ({
-  status = 'to-do',
+  status = '',
   today = false,
 }: IOrderSearchParams) => {
-  const currentDate = Date.now()
+  const today_ = moment().startOf('day')
 
   try {
     const orders = OrderModel.find({
-      ...(today && { createdAt: currentDate }),
+      ...(today && {
+        updatedAt: {
+          $gte: today_.toDate(),
+          $lt: moment(today_).endOf('day').toDate(),
+        },
+      }),
       ...(status != '' && { status }),
     })
       .populate({
@@ -96,6 +102,8 @@ export const getOrders = async ({
         createdAt: -1,
       })
     console.log("\x1b[33m%s\x1b[0m', `=> Get All Orders")
+    console.log(`${status} | ${today} | \n ${orders}`)
+
     return orders
   } catch (error) {
     console.warn("\x1b[33m%s\x1b[0m', `=> Get All Orders error")
