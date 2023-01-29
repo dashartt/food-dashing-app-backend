@@ -1,5 +1,5 @@
 import OrderModel from '../database/models/order.model'
-import { IOrder } from '../types'
+import { IOrder, IOrderSearchParams } from '../types'
 
 export const updateOrderStatus = async (_id: string, status: string) => {
   try {
@@ -69,9 +69,17 @@ export const getClientOrders = async (clientId: string) => {
   }
 }
 
-export const getOrders = async () => {
+export const getOrders = async ({
+  status = 'to-do',
+  today = false,
+}: IOrderSearchParams) => {
+  const currentDate = Date.now()
+
   try {
-    const orders = OrderModel.find({})
+    const orders = OrderModel.find({
+      ...(today && { createdAt: currentDate }),
+      ...(status != '' && { status }),
+    })
       .populate({
         path: 'clientId',
       })

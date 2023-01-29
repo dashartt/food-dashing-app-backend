@@ -35,7 +35,12 @@ export const getOrders = async (
   res: Response,
   next: NextFunction
 ) => {
-  const orders = await orderRepository.getOrders()
+  const params = req.query
+
+  const orders = await orderRepository.getOrders({
+    status: params.status as string,
+    today: params.today === 'true',
+  })
   res.status(200).json(orders)
 }
 

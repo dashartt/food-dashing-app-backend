@@ -61,6 +61,11 @@ export interface IOrder {
   payback?: number
 }
 
+export interface IOrderSearchParams {
+  today: boolean
+  status: string
+}
+
 declare global {
   namespace Express {
     interface Request {
