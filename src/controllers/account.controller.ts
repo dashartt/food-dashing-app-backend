@@ -57,7 +57,6 @@ export const validateToken = (
   const forward = req.headers['x-forward']
 
   const response = jwt.validateToken(token)
-  console.log(response)
 
   if (response?.data === null) {
     return res.status(403).json({

@@ -8,10 +8,7 @@ export const addOrderItems = async (
   next: NextFunction
 ) => {
   const items = req.body.items as IOrderItem[]
-  // console.log(items)
-
   const orderItemsId = await orderItemRepository.addOrderItems(items)
-  // console.log(orderItemsId)
 
   if (orderItemsId.length === 0) return next(0)
 
