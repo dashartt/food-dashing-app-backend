@@ -66,11 +66,25 @@ export interface IOrderSearchParams {
   status?: string
 }
 
+export interface IAccount {
+  _id: ObjectId
+  fullName: string
+  password: string
+  role: string
+}
+
+export interface IToken {
+  token: string
+}
+
+export interface IAccessToken extends IToken, Omit<IAccount, 'password'> {}
+
 declare global {
   namespace Express {
     interface Request {
       // attr: type
       orderItemsId: ObjectId[]
+      accessToken?: IAccessToken
     }
   }
 }
