@@ -102,7 +102,6 @@ export const getOrders = async ({
         createdAt: -1,
       })
     console.log("\x1b[33m%s\x1b[0m', `=> Get All Orders")
-    console.log(`${status} | ${today} | \n ${orders}`)
 
     return orders
   } catch (error) {
