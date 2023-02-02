@@ -13,3 +13,20 @@ export const addAddress = async (
 
   res.status(200).json({ addressId })
 }
+
+export const removeAddress = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const addressId = req.params.addressId || ''
+
+  const isDeleted = await addressRepository.removeAddress(addressId)
+
+  if (!isDeleted)
+    return res
+      .status(400)
+      .json({ isSuccess: false, message: 'Erro ao excluir o endereço' })
+
+  res.status(200).json({ isSuccess: true, message: 'Endereço excluido' })
+}
