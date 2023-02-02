@@ -14,6 +14,24 @@ export const addAddress = async (addressDTO: IAddress) => {
   }
 }
 
+export const updateAddress = async (addressDTO: IAddress) => {
+  try {
+    const address = await AddressModel.findByIdAndUpdate(addressDTO._id, {
+      ...addressDTO,
+    })
+    console.log(address)
+
+    if (!address)
+      console.log('\x1b[33m%s\x1b[0m', '=> Address not found to update')
+    else console.log('\x1b[33m%s\x1b[0m', '=> Address updated')
+
+    return true
+  } catch (error) {
+    console.log('\x1b[33m%s\x1b[0m', '=> Address not update')
+    return false
+  }
+}
+
 export const removeAddress = async (addressId: string) => {
   try {
     const address = await AddressModel.findByIdAndRemove(addressId)
