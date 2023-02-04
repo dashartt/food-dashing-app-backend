@@ -18,7 +18,7 @@ export const pusher = new Pusher({
   key: process.env.PUSHER_KEY as string,
   secret: process.env.PUSHER_SECRET as string,
   cluster: process.env.PUSHER_CLUSTER as string,
-  useTLS: true,
+  // useTLS: true,
 })
 export const beamsClient = new PushNotifications({
   instanceId: process.env.BEAM_ID as string,
