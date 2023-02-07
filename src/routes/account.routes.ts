@@ -1,13 +1,15 @@
 import { Router } from 'express'
 import {
-  getAuth,
-  register,
+  signin,
+  signup,
   validateToken,
+  updateAccount,
 } from '../controllers/account.controller'
 
 const router = Router()
 
-router.post('/auth', getAuth)
 router.get('/auth', validateToken)
-router.post('/', register)
+router.post('/signup', signup)
+router.post('/signin', signin)
+router.put('/', updateAccount)
 export default router

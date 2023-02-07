@@ -51,6 +51,12 @@ export const getClientOrders = async (
 ) => {
   const clientId = req.params.clientId
 
+  if (clientId === '')
+    return res.status(400).json({
+      isSuccess: false,
+      message: 'Erro ao buscar o histórico de pedidos',
+    })
+
   const orders = await orderRepository.getClientOrders(clientId)
   res.status(200).json(orders)
 }

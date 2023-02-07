@@ -1,24 +1,24 @@
 import AccountModel from '../database/models/account.model'
-import { IAccount } from '../types'
+import { IAccount, ICredentials } from '../types'
 
-export const registerAccount = async ({
-  fullName,
-  password,
-  role,
-}: IAccount) => {
-  const account = await AccountModel.create({ fullName, password, role })
-  console.log('\x1b[33m%s\x1b[0m', `=>  Account created, role: ${role}`)
+export const signup = async (accountDTO: IAccount) => {
+  const account = await AccountModel.create({ ...accountDTO })
+  console.log(
+    '\x1b[33m%s\x1b[0m',
+    `=>  Account created, role: ${accountDTO.role}`
+  )
   return {
     data: account as IAccount,
   }
 }
 
-export const authAccount = async ({ password }: Omit<IAccount, 'role'>) => {
+export const signin = async ({ phone, password }: ICredentials) => {
   try {
     const account = await AccountModel.findOne({
-      password,
+      $and: [{ phone }, { password }],
     })
     console.log("\x1b[33m%s\x1b[0m', `=> Account authenticated")
+
     return {
       data: account,
     }
@@ -27,5 +27,20 @@ export const authAccount = async ({ password }: Omit<IAccount, 'role'>) => {
     return {
       data: null,
     }
+  }
+}
+
+export const updateAccount = async (detailsDTO: IAccount) => {
+  try {
+    const account = await AccountModel.findByIdAndUpdate(detailsDTO._id, {
+      fullName: detailsDTO.fullName, // change to fullName
+      phone: detailsDTO.phone,
+      addressesId: detailsDTO.addressesId,
+    })
+    console.log("\x1b[33m%s\x1b[0m', `=> Client account updated")
+    return account?._id
+  } catch (error) {
+    console.warn("\x1b[33m%s\x1b[0m', `=> Client account not updated")
+    return null
   }
 }

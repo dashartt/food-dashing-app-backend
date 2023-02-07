@@ -1,16 +1,17 @@
 import { NextFunction, Request, Response } from 'express'
 import * as authRepository from '../repositories/account.repositories'
-import { IAccount } from '../types'
+
+import { IAccount, ICredentials } from '../types'
 import * as jwt from '../utils/auth'
 
-export const register = async (
+export const signup = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const account = req.body as IAccount
 
-  const response = await authRepository.registerAccount(account)
+  const response = await authRepository.signup(account)
 
   if (!response.data)
     return res
@@ -22,30 +23,49 @@ export const register = async (
     .json({ isSuccess: true, message: 'Conta criada com sucesso' })
 }
 
-export const getAuth = async (
+export const signin = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const password = req.body as Omit<IAccount, 'role'>
+  const account = req.body as ICredentials
 
-  const response = await authRepository.authAccount(password)
+  const response = await authRepository.signin(account)
+  console.log(account)
 
   if (!response.data)
     return res
       .status(400)
-      .json({ isSuccess: false, message: 'Senha incorreta' })
+      .json({ isSuccess: false, message: 'Celular ou senha incorreto' })
 
   const token = jwt.createToken(response.data)
+  const { phone, _id, fullName, role } = response.data
 
   return res.status(200).json({
     isSuccess: true,
     data: {
       token,
-      fullName: response.data.fullName,
+      session: {
+        fullName,
+        role,
+        _id,
+        phone,
+      },
     },
     message: 'Autenticado com sucesso',
   })
+}
+
+export const updateAccount = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const details = req.body as IAccount
+
+  const accountId = await authRepository.updateAccount(details)
+
+  res.status(200).json({ accountId })
 }
 
 export const validateToken = (
