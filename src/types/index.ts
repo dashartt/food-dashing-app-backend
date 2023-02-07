@@ -12,14 +12,6 @@ export interface IAddress {
 
 export interface IAddresses extends Array<IAddress> {}
 
-// CLIENT TYPE ------------------>
-export interface IClient {
-  _id?: ObjectId
-  name: string
-  phone: string
-  addressesId: ObjectId[]
-}
-
 // ITEM CATEGORY TYPE ------------->
 export interface IITemCategory {
   _id?: ObjectId
@@ -66,11 +58,16 @@ export interface IOrderSearchParams {
   status?: string
 }
 
-export interface IAccount {
-  _id: ObjectId
-  fullName: string
+export interface ICredentials {
+  phone: string
   password: string
+}
+
+export interface IAccount extends ICredentials {
+  _id?: ObjectId
+  fullName: string
   role: string
+  addressesId?: ObjectId[]
 }
 
 export interface IToken {
