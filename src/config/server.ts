@@ -29,14 +29,18 @@ export const beamsClient = new PushNotifications({
 app.use(express.json())
 app.use(
   cors({
-    origin: FRONTEND_URL,
+    origin: true,
   })
 )
 app.use(express.urlencoded({ extended: false }))
-// app.use((req: Request, res: Response, next: NextFunction) => {
-//   res.header('Access-Control-Allow-Origin', FRONTEND_URL)
-//   next()
-// })
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  )
+  next()
+})
 
 // Routes ----------------------->
 app.use(routes)
