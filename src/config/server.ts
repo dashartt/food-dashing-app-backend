@@ -33,10 +33,10 @@ app.use(
   })
 )
 app.use(express.urlencoded({ extended: false }))
-app.use((req: Request, res: Response, next: NextFunction) => {
-  res.header('Access-Control-Allow-Origin', FRONTEND_URL)
-  next()
-})
+// app.use((req: Request, res: Response, next: NextFunction) => {
+//   res.header('Access-Control-Allow-Origin', FRONTEND_URL)
+//   next()
+// })
 
 // Routes ----------------------->
 app.use(routes)
