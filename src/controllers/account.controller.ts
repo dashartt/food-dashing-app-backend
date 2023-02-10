@@ -28,12 +28,9 @@ export const signin = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(req.headers)
-
   const account = req.body as ICredentials
 
   const response = await authRepository.signin(account)
-  console.log(response)
 
   if (!response.data)
     return res
