@@ -31,7 +31,7 @@ export const signin = async (
   const account = req.body as ICredentials
 
   const response = await authRepository.signin(account)
-  console.log(account)
+  console.log(response)
 
   if (!response.data)
     return res
@@ -74,9 +74,19 @@ export const validateToken = (
   next: NextFunction
 ) => {
   const token = req.headers.authorization
-  const forward = req.headers['x-forward']
+  const forward = req.headers['x-forward'] || 'false'
+
+  console.log(token)
+
+  if (!token || token === '') {
+    return res.status(403).json({
+      isSuccess: false,
+      message: 'Sem autorização para essa ação',
+    })
+  }
 
   const response = jwt.validateToken(token)
+  console.log(response)
 
   if (response?.data === null) {
     return res.status(403).json({
