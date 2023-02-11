@@ -4,7 +4,7 @@ import { IAccount } from '../../types'
 export const accountSchema = new Schema<IAccount>(
   {
     fullName: { type: String, required: true },
-    password: { type: String, required: true },
+    password: { type: String, required: false },
     phone: { type: String, required: true },
     role: { type: String, required: true },
     addressesId: [

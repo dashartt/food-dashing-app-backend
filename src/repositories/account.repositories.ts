@@ -1,7 +1,7 @@
 import AccountModel from '../database/models/account.model'
-import { IAccount, ICredentials } from '../types'
+import { IAccount, IClientAccount, ICredentials } from '../types'
 
-export const signup = async (accountDTO: IAccount) => {
+export const signup = async (accountDTO: IAccount | IClientAccount) => {
   const account = await AccountModel.create({ ...accountDTO })
   console.log(
     '\x1b[33m%s\x1b[0m',

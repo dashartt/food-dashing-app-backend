@@ -70,6 +70,8 @@ export interface IAccount extends ICredentials {
   addressesId?: ObjectId[]
 }
 
+export interface IClientAccount extends Omit<IAccount, 'password'> {}
+
 export interface IToken {
   token: string
 }
