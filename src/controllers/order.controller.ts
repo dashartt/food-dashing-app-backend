@@ -4,6 +4,7 @@ import * as orderRepository from '../repositories/order.repository'
 import { IOrder } from '../types'
 import { pusher } from '../config/server'
 import { notifyNewOrder, notifyUpdateOrderStatus } from '../events'
+import { isObjectIdOrHexString } from 'mongoose'
 
 export const updateOrderStatus = async (
   req: Request,
@@ -51,7 +52,7 @@ export const getClientOrders = async (
 ) => {
   const clientId = req.params.clientId
 
-  if (clientId === '')
+  if (clientId === '' || !isObjectIdOrHexString(clientId))
     return res.status(400).json({
       isSuccess: false,
       message: 'Erro ao buscar o histórico de pedidos',
