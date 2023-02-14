@@ -3,7 +3,7 @@ import * as orderRepository from '../repositories/order.repository'
 
 import { IOrder } from '../types'
 import { pusher } from '../config/server'
-import { notifyNewOrder, notifyUpdateOrderStatus } from '../events'
+// import { notifyNewOrder, notifyUpdateOrderStatus } from '../events'
 import { isObjectIdOrHexString } from 'mongoose'
 
 export const updateOrderStatus = async (
@@ -16,8 +16,8 @@ export const updateOrderStatus = async (
 
   await orderRepository.updateOrderStatus(_id, status)
 
-  await pusher.trigger('client', 'update-order-status', status)
-  notifyUpdateOrderStatus(status, _id)
+  pusher.trigger('client', 'update-order-status', status)
+  // notifyUpdateOrderStatus(status, _id)
   res.status(200).end()
 }
 
@@ -81,8 +81,8 @@ export const addOrder = async (
 
   if (!orderId) return next(0)
 
-  await pusher.trigger('admin', 'new-order', orderId)
-  notifyNewOrder()
+  pusher.trigger('admin', 'new-order', orderId)
+  // notifyNewOrder()
 
   res.status(200).json({ orderId })
 }
