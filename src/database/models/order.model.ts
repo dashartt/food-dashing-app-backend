@@ -10,8 +10,9 @@ export const orderSchema = new Schema<IOrder>(
     clientId: { type: Schema.Types.ObjectId, ref: 'Account' },
     addressId: { type: Schema.Types.ObjectId, ref: 'Address' },
     orderItemsId: [{ type: Schema.Types.ObjectId, ref: 'OrderItems' }],
+    isDelivery: { type: Boolean },
     paymentType: { type: String },
-    payback: { type: Number, required: false },
+    payback: { type: Number },
   },
   {
     timestamps: true,

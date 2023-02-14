@@ -49,6 +49,7 @@ export interface IOrder {
   clientId: ObjectId
   addressId: ObjectId
   orderItemsId: ObjectId[]
+  isDelivery: boolean
   paymentType: string
   payback?: number
 }

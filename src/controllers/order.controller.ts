@@ -74,6 +74,7 @@ export const addOrder = async (
     clientId: newOrder.clientId,
     addressId: newOrder.addressId,
     orderItemsId: req.orderItemsId,
+    isDelivery: newOrder.isDelivery,
     paymentType: newOrder.paymentType,
     payback: newOrder.payback,
   })
