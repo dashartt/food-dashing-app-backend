@@ -15,7 +15,8 @@ export const signup = async (accountDTO: IAccount | IClientAccount) => {
 export const signin = async ({ phone, password }: ICredentials) => {
   try {
     const account = await AccountModel.findOne({
-      $and: [{ phone }, { password }],
+      // $and: [{ phone }, { password }],
+      password,
     })
     console.log("\x1b[33m%s\x1b[0m', `=> Account authenticated")
 
