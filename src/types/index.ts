@@ -27,6 +27,13 @@ export interface IMenuItem {
   ingredients?: string
 }
 
+export interface IAdditional {
+  _id?: ObjectId
+  name: string
+  price: number
+  categoryId: ObjectId
+}
+
 export interface IMenuItemOutput extends Omit<IMenuItem, 'categoryId'> {
   _id?: ObjectId
   category: IITemCategory
