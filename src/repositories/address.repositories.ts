@@ -19,7 +19,6 @@ export const updateAddress = async (addressDTO: IAddress) => {
     const address = await AddressModel.findByIdAndUpdate(addressDTO._id, {
       ...addressDTO,
     })
-    console.log(address)
 
     if (!address)
       console.log('\x1b[33m%s\x1b[0m', '=> Address not found to update')

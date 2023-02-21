@@ -27,12 +27,20 @@ export const getOrderById = async (orderId: string) => {
       .populate({
         path: 'addressId',
       })
-      .populate({
-        path: 'orderItemsId',
-        populate: {
-          path: 'itemIds',
+      .populate([
+        {
+          path: 'orderItemsId',
+          populate: {
+            path: 'itemIds',
+          },
         },
-      })
+        {
+          path: 'orderItemsId',
+          populate: {
+            path: 'additionalIds',
+          },
+        },
+      ])
 
     console.log("\x1b[33m%s\x1b[0m', `=> Get Order By Id")
     return order
@@ -92,12 +100,20 @@ export const getOrders = async ({
       .populate({
         path: 'addressId',
       })
-      .populate({
-        path: 'orderItemsId',
-        populate: {
-          path: 'itemIds',
+      .populate([
+        {
+          path: 'orderItemsId',
+          populate: {
+            path: 'itemIds',
+          },
         },
-      })
+        {
+          path: 'orderItemsId',
+          populate: {
+            path: 'additionalIds',
+          },
+        },
+      ])
       .sort({
         createdAt: -1,
       })

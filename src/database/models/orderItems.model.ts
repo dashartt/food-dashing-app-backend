@@ -6,6 +6,10 @@ export const orderItemsSchema = new Schema<IOrderItem>(
     itemIds: [{ type: Schema.Types.ObjectId, ref: 'MenuItem' }],
     quantity: { type: Number, required: true },
     observation: { type: String, required: false },
+    borderType: { type: String, required: false },
+    additionalIds: [
+      { type: Schema.Types.ObjectId, ref: 'Additional', required: false },
+    ],
   },
   {
     timestamps: true,
