@@ -14,8 +14,23 @@ export const addAdditional = async (
   res.status(200).json({
     isSuccess: true,
     message: 'Adicional adicionado com sucesso',
+
     data: {
       additional,
     },
+  })
+}
+
+export const getAdditionals = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const additionals = await additionalRepository.getAdditionals()
+
+  res.status(200).json({
+    isSuccess: true,
+    message: 'Busca de adicionais com sucesso',
+    data: additionals,
   })
 }

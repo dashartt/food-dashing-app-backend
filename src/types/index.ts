@@ -48,6 +48,8 @@ export interface IOrderItem {
   itemIds: ObjectId[]
   quantity: number
   observation?: string
+  borderType?: string
+  additionalIds?: ObjectId[]
 }
 
 export interface IOrder {
