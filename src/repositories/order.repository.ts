@@ -61,12 +61,20 @@ export const getClientOrders = async (clientId: string) => {
       .populate({
         path: 'addressId',
       })
-      .populate({
-        path: 'orderItemsId',
-        populate: {
-          path: 'itemIds',
+      .populate([
+        {
+          path: 'orderItemsId',
+          populate: {
+            path: 'itemIds',
+          },
         },
-      })
+        {
+          path: 'orderItemsId',
+          populate: {
+            path: 'additionalIds',
+          },
+        },
+      ])
       .sort({
         createdAt: -1,
       })
