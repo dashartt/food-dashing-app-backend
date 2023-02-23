@@ -8,7 +8,7 @@ export const addAdditional = async (additionalDTO: IAdditional) => {
 }
 
 export const getAdditionals = async () => {
-  const additionals = await AdditionalModel.find().populate('categoryId')
+  const additionals = await AdditionalModel.find().populate('categoryIds')
   console.log('\x1b[33m%s\x1b[0m', '=> Get additionals successfully')
 
   return additionals

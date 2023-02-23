@@ -5,7 +5,7 @@ export const additionalSchema = new Schema<IAdditional>(
   {
     name: { type: String },
     price: { type: Number },
-    categoryId: [{ type: Schema.Types.ObjectId, ref: 'ItemCategory' }],
+    categoryIds: [{ type: Schema.Types.ObjectId, ref: 'ItemCategory' }],
   },
   {
     timestamps: true,

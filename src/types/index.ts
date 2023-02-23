@@ -31,7 +31,7 @@ export interface IAdditional {
   _id?: ObjectId
   name: string
   price: number
-  categoryId: ObjectId
+  categoryIds: ObjectId[]
 }
 
 export interface IMenuItemOutput extends Omit<IMenuItem, 'categoryId'> {
