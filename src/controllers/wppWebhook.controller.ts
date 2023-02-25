@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Request, Response } from 'express'
 
-const token = process.env.WHATSAPP_TOKEN
+const accessToken = process.env.WHATSAPP_ACCESS_TOKEN
 
 export const getWebhook = (req: Request, res: Response) => {
   const verify_token = process.env.VERIFY_TOKEN
@@ -54,7 +54,7 @@ export const postWebhook = async (req: Request, res: Response) => {
     //       url: `https://graph.facebook.com/v15.0/${phone_number_id}/messages`,
     //       headers: {
     //         'Content-Type': 'application/json',
-    //         Authorization: `Bearer ${token}`,
+    //         Authorization: `Bearer ${accessToken}`,
     //       },
     //       data: {
     //         messaging_product: 'whatsapp',
