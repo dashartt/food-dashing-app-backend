@@ -1,5 +1,9 @@
 import { ObjectId } from 'mongodb'
 
+export type IUuid = {
+  _id?: ObjectId
+}
+
 // ADDRESS  TYPE --------------------->
 export interface IAddress {
   _id?: ObjectId
@@ -92,8 +96,11 @@ declare global {
   namespace Express {
     interface Request {
       // attr: type
+      addressId?: ObjectId | string | undefined
+      addressesId?: ObjectId[]
       orderItemsId: ObjectId[]
       accessToken?: IAccessToken
+      isForward?: boolean
     }
   }
 }

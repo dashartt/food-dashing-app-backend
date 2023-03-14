@@ -7,9 +7,7 @@ import routes from '../routes'
 // Constans ------------------------------>
 const ENV = process.env.NODE_ENV || 'dev'
 const FRONTEND_URL =
-  ENV === 'dev'
-    ? `http://localhost:3000`
-    : 'https://macacoloucopizzaria.vercel.app'
+  ENV === 'dev' ? `http://localhost:3000` : 'https://fooddashingapp.vercel.app'
 
 // Initialize ----------------------->
 const app = express()

@@ -1,32 +1,20 @@
 import { sign, verify } from 'jsonwebtoken'
-import { IAccessToken, IAccount, IToken } from '../types'
+import { IAccessToken } from '../types'
+import { IUser } from '../types/user.type'
 
 const JWT_KEY = process.env.JWT_KEY as string
 
-export const createToken = (account: Omit<IAccount, 'password'>) => {
-  return sign({ account }, JWT_KEY, {
-    expiresIn: '8h',
-  })
+export const createToken = (account: Omit<IUser, 'password'>) => {
+  return sign({ account }, JWT_KEY, { expiresIn: 0 })
 }
 
 export const validateToken = (token: string = '') => {
-  if (!token)
-    return {
-      data: null,
-    }
-  // throw new CustomError('UnauthorizedError', 'Token must be a valid token')
+  if (!token) return { data: null }
+
   try {
     const data = verify(token, JWT_KEY)
-
-    return {
-      data: data as IAccessToken,
-    }
+    return { data: data as IAccessToken }
   } catch (error) {
-    if (error) {
-      return {
-        data: null,
-      }
-      // throw new CustomError('UnauthorizedError', 'Token must be a valid token')
-    }
+    return { data: null }
   }
 }

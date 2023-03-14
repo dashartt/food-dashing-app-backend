@@ -1,47 +1,46 @@
+import { ObjectId } from 'mongoose'
 import AddressModel from '../database/models/address.model'
-import { IAddress } from '../types'
+import { IAddress } from '../types/address.type'
 
-export const addAddress = async (addressDTO: IAddress) => {
-  try {
-    const address = await AddressModel.create({
-      ...addressDTO,
+export const findAddress = async (address: IAddress) =>
+  AddressModel.find({
+    housenumber: address.housenumber,
+    street: address.street,
+    city: address.city,
+  })
+    .then((data: IAddress[]) => {
+      const address = data.length > 0 ? data[0] : null
+      return { data: address }
     })
-    console.log('\x1b[33m%s\x1b[0m', '=> New Address inserted')
-    return address._id
-  } catch (error) {
-    console.log('\x1b[33m%s\x1b[0m', '=> New Address not inserted')
-    return null
-  }
-}
-
-export const updateAddress = async (addressDTO: IAddress) => {
-  try {
-    const address = await AddressModel.findByIdAndUpdate(addressDTO._id, {
-      ...addressDTO,
+    .catch((error) => {
+      console.log(error)
+      return { data: null }
     })
 
-    if (!address)
-      console.log('\x1b[33m%s\x1b[0m', '=> Address not found to update')
-    else console.log('\x1b[33m%s\x1b[0m', '=> Address updated')
+export const addAddress = async (address: IAddress) =>
+  AddressModel.create({
+    ...address,
+  })
+    .then((data) => ({ data }))
+    .catch((error) => {
+      console.log(error)
+      return { data: null }
+    })
 
-    return true
-  } catch (error) {
-    console.log('\x1b[33m%s\x1b[0m', '=> Address not update')
-    return false
-  }
-}
+export const updateAddress = async (address: IAddress) =>
+  AddressModel.findByIdAndUpdate(address._id, {
+    ...address,
+  })
+    .then((data) => ({ data }))
+    .catch((error) => {
+      console.log(error)
+      return { data: null }
+    })
 
-export const removeAddress = async (addressId: string) => {
-  try {
-    const address = await AddressModel.findByIdAndRemove(addressId)
-
-    if (!address)
-      console.log('\x1b[33m%s\x1b[0m', '=> Address not found to delete')
-    else console.log('\x1b[33m%s\x1b[0m', '=> Address deleted')
-
-    return true
-  } catch (error) {
-    console.log('\x1b[33m%s\x1b[0m', '=> Address not deleted, Error: ', error)
-    return false
-  }
-}
+export const removeAddress = async (addressId: ObjectId | string) =>
+  AddressModel.findByIdAndRemove(addressId)
+    .then((data) => ({ data }))
+    .catch((error) => {
+      console.log(error)
+      return { data: null }
+    })
