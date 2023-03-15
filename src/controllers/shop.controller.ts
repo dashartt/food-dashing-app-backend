@@ -6,31 +6,37 @@ import { IShopSettings } from '../types/shop/settings.type'
 import { IAddress } from '../types/address.type'
 
 export const addShop = async (req: Request, res: Response) => {
-  console.log(req.body)
-
   const shopInfo = req.body as Partial<IShopSettings>
   let addressId = null
 
-  // v-- check shop name duplicity
-  const shopExistResponse = await shopRepository.findShopByName(
+  const shopNameResponse = await shopRepository.findShopByName(
     shopInfo.shopName || ''
   )
 
-  if (shopExistResponse.data) {
+  if (shopNameResponse.data) {
     return res.status(400).json({
       data: null,
       message: 'Esse nome já está sendo utilizado',
     })
   }
-  // ^-- check shop name duplicity
 
-  // v-- try to find the address
   const findAddressResponse = await addressRepository.findAddress(
     shopInfo.shopAddress as IAddress
   )
-  // ^-- try to find the address
 
-  // v-- if it doesn't exist, add it
+  if (findAddressResponse.data) {
+    const shopAddressResponse = await shopRepository.findShopByAddress(
+      shopInfo.shopAddress as IAddress
+    )
+
+    if (shopAddressResponse.data) {
+      return res.status(400).json({
+        data: null,
+        message: 'Endereço já vinculado a uma loja',
+      })
+    }
+  }
+
   if (!findAddressResponse.data) {
     const address = await addressRepository.addAddress(
       shopInfo.shopAddress as IAddress
@@ -38,9 +44,7 @@ export const addShop = async (req: Request, res: Response) => {
     addressId = address.data?._id
   }
   addressId = findAddressResponse.data?._id
-  // ^-- if it doesn't exist, add it
 
-  // v-- if it doesn't exist, add it
   const addShopResponse = await shopRepository.addShop({
     ...shopInfo,
     shopAddress: { _id: addressId },
@@ -56,12 +60,32 @@ export const addShop = async (req: Request, res: Response) => {
     message: 'Loja criada com sucesso',
     data: addShopResponse.data,
   })
-  // ^-- if it doesn't exist, add it
 }
 
 export const getShops = async (req: Request, res: Response) => {
   const query = req.query
 
+  if (query?.addressPlaceIdAndHouseNumber) {
+    const shopAddress =
+      await shopRepository.findShopByAddressPlaceIdAndHousenumber(
+        query.addressPlaceIdAndHouseNumber as string
+      )
+
+    if (shopAddress.data) {
+      return res.status(400).json({
+        data: {
+          isDuplicated: true,
+        },
+        message: 'Já existe uma loja com esse endereço',
+      })
+    }
+    return res.status(200).json({
+      data: {
+        isDuplicated: false,
+      },
+      message: 'Endereço disponível',
+    })
+  }
   if (query?.shopName) {
     const shopExist = await shopRepository.findShopByName(
       query?.shopName as string
