@@ -106,7 +106,6 @@ export const getShops = async (req: Request, res: Response) => {
       message: 'Nome disponível',
     })
   }
-
   if (query?.ownerId) {
     const ownerShops = await shopRepository.getShopsByOwner(
       query?.ownerId as string
@@ -117,10 +116,77 @@ export const getShops = async (req: Request, res: Response) => {
       data: ownerShops.data,
     })
   }
+  if (query?.shopId) {
+    const shop = await shopRepository.findShopById(query?.shopId as string)
+
+    if (!shop.data) {
+      return res.status(404).json({
+        data: null,
+        message: 'Nenhuma loja encontrada',
+      })
+    }
+    return res.status(200).json({
+      data: shop.data,
+      message: 'Loja encontrada',
+    })
+  }
 
   return res.status(400).json({
     data: null,
     message:
       'Nenhum parâmetro informado para buscar informações para esse endpoint',
+  })
+}
+
+export const saveShopSettings = async (req: Request, res: Response) => {
+  const shopId = req.params.shopId as string
+  const values = req.body as Partial<IShopSettings>
+  let response = null
+
+  if (values.categories) {
+    response = await shopRepository.saveShopSettings({
+      shopId,
+      settings: {
+        categories: values.categories,
+      },
+    })
+  }
+
+  if (values.items) {
+    response = await shopRepository.saveShopSettings({
+      shopId,
+      settings: {
+        items: values.items,
+      },
+    })
+  }
+
+  if (values.additional) {
+    response = await shopRepository.saveShopSettings({
+      shopId,
+      settings: {
+        additional: values.additional,
+      },
+    })
+  }
+
+  if (values.shopOpeningHours || values.deliveryFees) {
+    response = await shopRepository.saveShopSettings({
+      shopId,
+      settings: {
+        // ...(values.shopAddress && { shop: values.shopName }),
+        ...(values.deliveryFees && { deliveryFees: values.deliveryFees }),
+        ...(values.shopOpeningHours && {
+          shopOpeningHours: values.shopOpeningHours,
+        }),
+      },
+    })
+  }
+
+  return res.status(200).json({
+    data: response?.data,
+    message: response?.data
+      ? 'Alterações registradas'
+      : 'Erro ao registrar alterações',
   })
 }

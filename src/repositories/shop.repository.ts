@@ -47,6 +47,18 @@ export const findShopByName = async (shopName: string) =>
       return { data: null }
     })
 
+export const findShopById = async (shopId: string) =>
+  ShopModel.findOne({
+    _id: shopId,
+  })
+    .populate('owner', { password: 0 })
+    .populate('shopAddress')
+    .then((data) => ({ data }))
+    .catch((e) => {
+      console.log(e)
+      return { data: null }
+    })
+
 export const addShop = async (data: Partial<IShopSettings>) =>
   ShopModel.create({
     owner: data.owner,
@@ -67,3 +79,24 @@ export const getShopsByOwner = async (ownerId: string) =>
     .populate('shopAddress')
     .then((data) => ({ data }))
     .catch(() => ({ data: null }))
+
+type SaveSettingsParams = {
+  shopId: string
+  settings: Partial<IShopSettings>
+}
+export const saveShopSettings = ({
+  settings,
+  shopId,
+}: SaveSettingsParams): Promise<{ data: null | IShopSettings }> =>
+  ShopModel.findByIdAndUpdate(
+    shopId,
+    { ...settings },
+    {
+      new: true,
+    }
+  )
+    .then((data) => ({ data }))
+    .catch((error) => {
+      console.log(error)
+      return { data: null }
+    })
