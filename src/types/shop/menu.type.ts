@@ -2,6 +2,9 @@ import type { IUuid } from '..'
 
 export type IItemCategory = IUuid & {
   name: string
+  allowObservation: boolean
+  allowHalf: boolean
+  allowAdditional: boolean
 }
 
 export type IMenuItem = IUuid & {

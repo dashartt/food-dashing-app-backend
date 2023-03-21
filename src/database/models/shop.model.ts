@@ -11,9 +11,45 @@ export const shopSchema = new Schema<IShopSettings>({
     hours: { starts: { type: String }, ends: { type: String } },
   },
   deliveryFees: [{ upToKm: { type: Number }, price: { type: Number } }],
-  items: [{ type: Schema.Types.ObjectId, ref: 'MenuItem' }],
-  categories: [{ type: Schema.Types.ObjectId, ref: 'ItemCategory' }],
-  additional: [{ type: Schema.Types.ObjectId, ref: 'Additional' }],
+  categories: [
+    {
+      name: { type: String },
+      allowObservation: { type: Boolean, default: false },
+      allowHalf: { type: Boolean, default: false },
+      allowAdditional: { type: Boolean, default: false },
+    },
+  ],
+  items: [
+    {
+      category: {
+        name: { type: String },
+        allowObservation: { type: Boolean, default: false },
+        allowHalf: { type: Boolean, default: false },
+        allowAdditional: { type: Boolean, default: false },
+      },
+      name: { type: String },
+      price: { type: Number },
+      ingredients: { type: String, required: false },
+    },
+  ],
+  additional: [
+    {
+      categories: [
+        {
+          name: { type: String },
+          allowObservation: { type: Boolean, default: false },
+          allowHalf: { type: Boolean, default: false },
+          allowAdditional: { type: Boolean, default: false },
+        },
+      ],
+      name: {
+        type: String,
+      },
+      price: {
+        type: Number,
+      },
+    },
+  ],
 })
 
 const ShopModel = model<IShopSettings>('Shop', shopSchema)

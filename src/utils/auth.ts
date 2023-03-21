@@ -5,7 +5,7 @@ import { IUser } from '../types/user.type'
 const JWT_KEY = process.env.JWT_KEY as string
 
 export const createToken = (account: Omit<IUser, 'password'>) => {
-  return sign({ account }, JWT_KEY, { expiresIn: 0 })
+  return sign({ account }, JWT_KEY, { expiresIn: '1d' })
 }
 
 export const validateToken = (token: string = '') => {

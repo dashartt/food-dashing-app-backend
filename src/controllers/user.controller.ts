@@ -39,8 +39,8 @@ export const signin = async (req: Request, res: Response) => {
         fullName,
         email,
         role,
-        _id,
         addresses,
+        _id,
       },
     },
     message: 'Autenticado com sucesso',
@@ -64,6 +64,17 @@ export const signin = async (req: Request, res: Response) => {
 //     },
 //   })
 // }
+export const verifyAuth = (req: Request, res: Response) => {
+  const token = req.headers.authorization as string
+
+  const response = jwt.validateToken(token)
+  const hasAuth = !!response.data
+
+  return res.status(hasAuth ? 200 : 403).json({
+    data: { hasAuth },
+    message: hasAuth ? 'Autorizado' : 'Não autorizado',
+  })
+}
 
 // export const validateToken = (
 //   req: Request,
