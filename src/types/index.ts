@@ -57,17 +57,19 @@ export interface IOrderItem {
 }
 
 export interface IOrder {
-  status: string
-  orderCount?: number
+  shopId: ObjectId
   clientId: ObjectId
-  addressId: ObjectId
   orderItemsId: ObjectId[]
+  status: string
+  addressId: ObjectId
   isDelivery: boolean
   paymentType: string
   payback?: number
+  orderCount?: number
 }
 
 export interface IOrderSearchParams {
+  shopId: string
   today?: boolean
   status?: string
 }

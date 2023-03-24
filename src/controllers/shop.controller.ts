@@ -1,9 +1,12 @@
 import { Request, Response } from 'express'
 import * as shopRepository from '../repositories/shop.repository'
+import * as orderRepository from '../repositories/order.repository'
+import * as orderController from '../controllers/order.controller'
 import * as addressRepository from '../repositories/address.repositories'
 
 import { IShopSettings } from '../types/shop/settings.type'
 import { IAddress } from '../types/address.type'
+import { isObjectIdOrHexString } from 'mongoose'
 
 export const addShop = async (req: Request, res: Response) => {
   const shopInfo = req.body as Partial<IShopSettings>
@@ -62,28 +65,54 @@ export const addShop = async (req: Request, res: Response) => {
   })
 }
 
-export const getShops = async (req: Request, res: Response) => {
+export const getRootHandler = async (req: Request, res: Response) => {
   const query = req.query
 
-  if (query?.addressPlaceIdAndHouseNumber) {
-    const shopAddress =
-      await shopRepository.findShopByAddressPlaceIdAndHousenumber(
-        query.addressPlaceIdAndHouseNumber as string
-      )
+  if (query?.shopId && query?.getOrders === 'true') {
+    console.log(query.shopId)
+    console.log(query.ordersStatus)
+    console.log(query.ordersToday)
 
-    if (shopAddress.data) {
-      return res.status(400).json({
-        data: {
-          isDuplicated: true,
-        },
-        message: 'Já existe uma loja com esse endereço',
+    const response = await orderRepository.getShopOrders({
+      shopId: query?.shopId as string,
+      status: query?.ordersStatus as string,
+      today: query?.ordersToday === 'true',
+    })
+
+    return res.status(200).json({
+      data: response.data,
+      message: 'Busca de pedidos realizada com sucesso',
+    })
+  }
+  if (query?.shopId && query?.userId) {
+    const { shopId = '', userId = '' } = query
+
+    const orders = await orderRepository.getClientOrders(
+      shopId as string,
+      userId as string
+    )
+    return res.status(200).json({
+      data: orders,
+      message: 'Sucesso ao buscar os pedidos',
+    })
+  }
+  if (query?.shopId && query?.orderId) {
+    const { shopId = '', orderId = '' } = query
+    const response = await orderRepository.getOrderById(
+      shopId as string,
+      orderId as string
+    )
+
+    if (!response.data) {
+      return res.status(404).json({
+        data: null,
+        message: 'Pedido não encontrado',
       })
     }
+
     return res.status(200).json({
-      data: {
-        isDuplicated: false,
-      },
-      message: 'Endereço disponível',
+      data: response.data,
+      message: 'Pedido encontrado',
     })
   }
   if (query?.shopName) {
@@ -128,6 +157,27 @@ export const getShops = async (req: Request, res: Response) => {
     return res.status(200).json({
       data: shop.data,
       message: 'Loja encontrada',
+    })
+  }
+  if (query?.addressPlaceIdAndHouseNumber) {
+    const shopAddress =
+      await shopRepository.findShopByAddressPlaceIdAndHousenumber(
+        query.addressPlaceIdAndHouseNumber as string
+      )
+
+    if (shopAddress.data) {
+      return res.status(400).json({
+        data: {
+          isDuplicated: true,
+        },
+        message: 'Já existe uma loja com esse endereço',
+      })
+    }
+    return res.status(200).json({
+      data: {
+        isDuplicated: false,
+      },
+      message: 'Endereço disponível',
     })
   }
 

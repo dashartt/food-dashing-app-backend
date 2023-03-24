@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
+import { ObjectId } from 'mongoose'
 import * as userRepository from '../repositories/user.repository'
+import { IAddress } from '../types/address.type'
 import { ICredential, IUser } from '../types/user.type'
 import * as jwt from '../utils/auth'
 
@@ -64,6 +66,7 @@ export const signin = async (req: Request, res: Response) => {
 //     },
 //   })
 // }
+
 export const verifyAuth = (req: Request, res: Response) => {
   const token = req.headers.authorization as string
 
@@ -76,40 +79,21 @@ export const verifyAuth = (req: Request, res: Response) => {
   })
 }
 
-// export const validateToken = (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   const token = req.headers.authorization
-//   const forward = req.headers['x-forward'] || 'false'
+export const addAddress = async (req: Request, res: Response) => {
+  const userId = req.params.userId as unknown as ObjectId
+  const addresses = req.body as IAddress[]
 
-//   console.log(token)
-
-//   if (!token || token === '') {
-//     return res.status(403).json({
-//       isSuccess: false,
-//       message: 'Sem autorização para essa ação',
-//     })
-//   }
-
-//   const response = jwt.validateToken(token)
-//   console.log(response)
-
-//   if (response?.data === null) {
-//     return res.status(403).json({
-//       isSuccess: false,
-//       message: 'Sem autorização para essa ação',
-//     })
-//   }
-
-//   if (forward === 'true') {
-//     req.accessToken = response?.data
-//     return next()
-//   } else {
-//     return res.status(200).json({
-//       isSuccess: true,
-//       message: 'Autorizado',
-//     })
-//   }
-// }
+  const response = await userRepository.update(userId, {
+    addresses,
+  })
+  if (!response.data) {
+    return res.status(400).json({
+      data: null,
+      message: 'Erro ao adicionar novo endereço',
+    })
+  }
+  return res.status(201).json({
+    data: response.data.addresses,
+    message: 'Sucesso ao adicionar o novo endereço',
+  })
+}

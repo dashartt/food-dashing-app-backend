@@ -18,42 +18,40 @@ export const updateOrderStatus = async (_id: string, status: string) => {
   }
 }
 
-export const getOrderById = async (orderId: string) => {
-  try {
-    const order = OrderModel.findOne({ _id: orderId })
-      .populate({
-        path: 'clientId',
-      })
-      .populate({
-        path: 'addressId',
-      })
-      .populate([
-        {
-          path: 'orderItemsId',
-          populate: {
-            path: 'itemIds',
-          },
+export const getOrderById = async (shopId: string, orderId: string) =>
+  OrderModel.findOne({
+    $and: [{ _id: orderId }, { shopId }],
+    // _id: orderId,
+    // shopId,
+  })
+    .populate({
+      path: 'clientId',
+      select: 'fullName',
+    })
+    .populate([
+      {
+        path: 'orderItemsId',
+        populate: {
+          path: 'itemIds',
         },
-        {
-          path: 'orderItemsId',
-          populate: {
-            path: 'additionalIds',
-          },
+      },
+      {
+        path: 'orderItemsId',
+        populate: {
+          path: 'additionalIds',
         },
-      ])
+      },
+    ])
+    .then((data) => ({ data }))
+    .catch((error) => {
+      console.log(error)
+      return { data: null }
+    })
 
-    console.log("\x1b[33m%s\x1b[0m', `=> Get Order By Id")
-    return order
-  } catch (error) {
-    console.warn("\x1b[33m%s\x1b[0m', `=> Get Order By Id error")
-    return []
-  }
-}
-
-export const getClientOrders = async (clientId: string) => {
+export const getClientOrders = async (shopId: string, clientId: string) => {
   try {
     const orders = OrderModel.find({
-      clientId,
+      $and: [{ clientId }, { shopId }],
     })
       .populate({
         path: 'clientId',
@@ -86,64 +84,57 @@ export const getClientOrders = async (clientId: string) => {
   }
 }
 
-export const getOrders = async ({
+export const getShopOrders = async ({
+  shopId,
   status = '',
   today = false,
 }: IOrderSearchParams) => {
   const today_ = moment().startOf('day')
 
-  try {
-    const orders = OrderModel.find({
-      ...(today && {
-        updatedAt: {
-          $gte: today_.toDate(),
-          $lt: moment(today_).endOf('day').toDate(),
-        },
-      }),
-      ...(status != '' && { status }),
+  return OrderModel.find({
+    shopId,
+    ...(today && {
+      updatedAt: {
+        $gte: today_.toDate(),
+        $lt: moment(today_).endOf('day').toDate(),
+      },
+    }),
+    ...(status != '' && { status }),
+  })
+    .populate({
+      path: 'clientId',
+      select: 'fullName',
     })
-      .populate({
-        path: 'clientId',
-      })
-      .populate({
-        path: 'addressId',
-      })
-      .populate([
-        {
-          path: 'orderItemsId',
-          populate: {
-            path: 'itemIds',
-          },
+    .populate([
+      {
+        path: 'orderItemsId',
+        populate: {
+          path: 'itemIds',
         },
-        {
-          path: 'orderItemsId',
-          populate: {
-            path: 'additionalIds',
-          },
+      },
+      {
+        path: 'orderItemsId',
+        populate: {
+          path: 'additionalIds',
         },
-      ])
-      .sort({
-        createdAt: -1,
-      })
-    console.log("\x1b[33m%s\x1b[0m', `=> Get All Orders")
-
-    return orders
-  } catch (error) {
-    console.warn("\x1b[33m%s\x1b[0m', `=> Get All Orders error")
-    return []
-  }
+      },
+    ])
+    .sort({
+      createdAt: -1,
+    })
+    .then((data) => ({ data }))
+    .catch((error) => {
+      console.log(error)
+      return { data: null }
+    })
 }
 
-export const addOrder = async (orderDTO: IOrder) => {
-  try {
-    const orderId = await OrderModel.create({
-      ...orderDTO,
+export const addOrder = async (orderDTO: IOrder) =>
+  OrderModel.create({
+    ...orderDTO,
+  })
+    .then((data) => ({ data }))
+    .catch((error) => {
+      console.log(error)
+      return { data: null }
     })
-
-    console.log("\x1b[33m%s\x1b[0m', `=> New Order inserted")
-    return orderId._id
-  } catch (error) {
-    console.warn("\x1b[33m%s\x1b[0m', `=> New Order not inserted")
-    return null
-  }
-}

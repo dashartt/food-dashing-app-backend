@@ -1,13 +1,14 @@
 import { Router } from 'express'
+import { getClientOrders, getOrderById } from '../controllers/order.controller'
 import {
-  getShops,
   addShop,
   saveShopSettings,
+  getRootHandler,
 } from '../controllers/shop.controller'
 
 const router = Router()
 
-router.get('/', getShops)
+router.get('/', getRootHandler)
 router.post('/', addShop)
 router.patch('/:shopId', saveShopSettings)
 

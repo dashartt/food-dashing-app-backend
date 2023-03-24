@@ -5,9 +5,10 @@ const AutoIncrement = require('mongoose-sequence')(mongoose)
 
 export const orderSchema = new Schema<IOrder>(
   {
+    shopId: { type: Schema.Types.ObjectId, ref: 'Shop' },
+    clientId: { type: Schema.Types.ObjectId, ref: 'User' },
     status: { type: String, default: 'to-do' },
     orderCount: { type: Number },
-    clientId: { type: Schema.Types.ObjectId, ref: 'Account' },
     addressId: { type: Schema.Types.ObjectId, ref: 'Address' },
     orderItemsId: [{ type: Schema.Types.ObjectId, ref: 'OrderItems' }],
     isDelivery: { type: Boolean },
@@ -20,7 +21,6 @@ export const orderSchema = new Schema<IOrder>(
 )
 
 orderSchema.plugin(AutoIncrement, { inc_field: 'orderCount', id: 'order_seq' })
-orderSchema.path('id')
 
 const OrderModel = model<IOrder>('Order', orderSchema)
 

@@ -1,4 +1,6 @@
+import { ObjectId } from 'mongoose'
 import UserModel from '../database/models/user.model'
+import { IAddress } from '../types/address.type'
 import { ICredential, IUser } from '../types/user.type'
 
 export const signup = async (account: IUser) =>
@@ -13,9 +15,9 @@ export const signin = async ({ email, password }: ICredential) =>
     .then((data) => ({ data }))
     .catch(() => ({ data: null }))
 
-export const update = async (data: Partial<IUser>) =>
-  UserModel.findByIdAndUpdate(data._id, {
+export const update = async (userId: ObjectId, data: Partial<IUser>) =>
+  UserModel.findByIdAndUpdate(userId, {
     ...data,
   })
-    .then((data) => ({ data: data?._id }))
+    .then((data) => ({ data: data }))
     .catch(() => ({ data: null }))

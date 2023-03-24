@@ -1,4 +1,5 @@
 import { IUuid } from '.'
+import { IAddress } from './address.type'
 
 export type ICredential = {
   email: string
@@ -10,5 +11,5 @@ export type IUser = IUuid &
   ICredential & {
     fullName: string
     shopId?: string
-    addresses?: string[]
+    addresses?: IAddress[]
   }
