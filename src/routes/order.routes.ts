@@ -6,11 +6,11 @@ import {
   getClientOrders,
   updateOrderStatus,
 } from '../controllers/order.controller'
-import { addOrderItems } from '../controllers/orderItems.controller'
+// import { addOrderItems } from '../controllers/orderItems.controller'
 
 const router = Router()
 
-router.post('/', addOrderItems, addOrder)
+router.post('/', addOrder)
 router.get('/', getOrders)
 router.get('/client/:clientId', getClientOrders)
 router.get('/:orderId', getOrderById)

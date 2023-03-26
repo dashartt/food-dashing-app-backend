@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import * as orderRepository from '../repositories/order.repository'
 
-import { IOrder } from '../types'
 import { pusher } from '../config/server'
 import { notifyNewOrder, notifyUpdateOrderStatus } from '../events'
 import { isObjectIdOrHexString } from 'mongoose'
+import { IOrder } from '../types/shop/order.type'
 
 export const updateOrderStatus = async (req: Request, res: Response) => {
   const _id = req.params._id as string
@@ -14,7 +14,13 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
 
   pusher.trigger('client', 'update-order-status', status)
   notifyUpdateOrderStatus(status, _id)
-  res.status(200).end()
+  res.status(200).json({
+    data: {
+      orderId: _id,
+      status,
+    },
+    message: 'Status do pedido alterado',
+  })
 }
 
 export const getOrderById = async (req: Request, res: Response) => {
@@ -37,13 +43,13 @@ export const getOrderById = async (req: Request, res: Response) => {
 export const getOrders = async (req: Request, res: Response) => {
   const query = req.query
 
-  const orders = await orderRepository.getShopOrders({
+  const response = await orderRepository.getShopOrders({
     shopId: query?.shopId as string,
     status: query.status as string,
     today: query.today === 'true',
   })
   res.status(200).json({
-    data: orders,
+    data: response.data,
     message: 'Sucesso ao buscar os pedidos',
   })
 }
@@ -57,23 +63,24 @@ export const getClientOrders = async (req: Request, res: Response) => {
       message: 'Erro ao buscar o histórico de pedidos',
     })
 
-  const orders = await orderRepository.getClientOrders(shopId, clientId)
+  const response = await orderRepository.getClientOrders(shopId, clientId)
+  console.log(response.data)
+
   res.status(200).json({
-    data: orders,
+    data: response.data,
     message: 'Sucesso ao buscar os pedidos',
   })
 }
 
 export const addOrder = async (req: Request, res: Response) => {
   const newOrder = req.body as IOrder
-  console.log(newOrder)
 
   const order = await orderRepository.addOrder({
-    shopId: newOrder.shopId,
     status: 'to-do',
-    clientId: newOrder.clientId,
-    addressId: newOrder.addressId,
-    orderItemsId: req.orderItemsId,
+    shop: { _id: newOrder.shop._id },
+    client: { _id: newOrder.client._id },
+    address: newOrder.address,
+    items: newOrder.items,
     isDelivery: newOrder.isDelivery,
     paymentType: newOrder.paymentType,
     payback: newOrder.payback,
@@ -86,8 +93,8 @@ export const addOrder = async (req: Request, res: Response) => {
     })
   }
 
-  pusher.trigger('admin', 'new-order', order.data._id)
-  notifyNewOrder()
+  // // pusher.trigger('admin', 'new-order', order.data._id)
+  // // notifyNewOrder()
 
   res.status(200).json({
     data: {

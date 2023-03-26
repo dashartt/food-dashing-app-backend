@@ -1,3 +1,4 @@
+import { IUuid } from '..'
 import { IAddress } from '../address.type'
 import { IUser } from '../user.type'
 import { IAdditional, IItemCategory, IMenuItem } from './menu.type'
@@ -9,7 +10,7 @@ export type IShopOpeningHours = {
 
 export type IDeliveryFeeByDistance = { upToKm: number; price: number }
 
-export type IShopSettings = {
+export type IShopSettings = IUuid & {
   owner: IUser
   shopName: string
   shopAddress: IAddress | Partial<IAddress>

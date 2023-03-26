@@ -2,11 +2,9 @@ import { Request, Response } from 'express'
 import * as shopRepository from '../repositories/shop.repository'
 import * as orderRepository from '../repositories/order.repository'
 import * as orderController from '../controllers/order.controller'
-import * as addressRepository from '../repositories/address.repositories'
 
 import { IShopSettings } from '../types/shop/settings.type'
-import { IAddress } from '../types/address.type'
-import { isObjectIdOrHexString } from 'mongoose'
+import { ObjectId } from 'mongoose'
 
 export const addShop = async (req: Request, res: Response) => {
   const shopInfo = req.body as Partial<IShopSettings>
@@ -23,35 +21,7 @@ export const addShop = async (req: Request, res: Response) => {
     })
   }
 
-  const findAddressResponse = await addressRepository.findAddress(
-    shopInfo.shopAddress as IAddress
-  )
-
-  if (findAddressResponse.data) {
-    const shopAddressResponse = await shopRepository.findShopByAddress(
-      shopInfo.shopAddress as IAddress
-    )
-
-    if (shopAddressResponse.data) {
-      return res.status(400).json({
-        data: null,
-        message: 'Endereço já vinculado a uma loja',
-      })
-    }
-  }
-
-  if (!findAddressResponse.data) {
-    const address = await addressRepository.addAddress(
-      shopInfo.shopAddress as IAddress
-    )
-    addressId = address.data?._id
-  }
-  addressId = findAddressResponse.data?._id
-
-  const addShopResponse = await shopRepository.addShop({
-    ...shopInfo,
-    shopAddress: { _id: addressId },
-  })
+  const addShopResponse = await shopRepository.addShop({ ...shopInfo })
 
   if (!addShopResponse.data)
     return res.status(400).json({
@@ -69,10 +39,6 @@ export const getRootHandler = async (req: Request, res: Response) => {
   const query = req.query
 
   if (query?.shopId && query?.getOrders === 'true') {
-    console.log(query.shopId)
-    console.log(query.ordersStatus)
-    console.log(query.ordersToday)
-
     const response = await orderRepository.getShopOrders({
       shopId: query?.shopId as string,
       status: query?.ordersStatus as string,
@@ -87,20 +53,20 @@ export const getRootHandler = async (req: Request, res: Response) => {
   if (query?.shopId && query?.userId) {
     const { shopId = '', userId = '' } = query
 
-    const orders = await orderRepository.getClientOrders(
-      shopId as string,
-      userId as string
+    const response = await orderRepository.getClientOrders(
+      shopId as unknown as ObjectId,
+      userId as unknown as ObjectId
     )
     return res.status(200).json({
-      data: orders,
+      data: response.data,
       message: 'Sucesso ao buscar os pedidos',
     })
   }
   if (query?.shopId && query?.orderId) {
     const { shopId = '', orderId = '' } = query
     const response = await orderRepository.getOrderById(
-      shopId as string,
-      orderId as string
+      shopId as unknown as ObjectId,
+      orderId as unknown as ObjectId
     )
 
     if (!response.data) {
