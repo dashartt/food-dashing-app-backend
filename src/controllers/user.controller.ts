@@ -10,6 +10,8 @@ export const signup = async (req: Request, res: Response) => {
 
   const response = await userRepository.signup(user)
 
+  console.log(response)
+
   if (!response.data)
     return res
       .status(400)
@@ -25,6 +27,8 @@ export const signin = async (req: Request, res: Response) => {
   const user = req.body as ICredential
 
   const response = await userRepository.signin(user)
+
+  console.log(response)
 
   if (!response.data)
     return res
