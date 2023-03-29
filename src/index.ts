@@ -18,3 +18,5 @@ database
     console.log(`=======> Server will close\n\n`)
     process.exit(1)
   })
+
+export default server
