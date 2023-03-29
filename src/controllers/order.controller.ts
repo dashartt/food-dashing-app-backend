@@ -3,7 +3,7 @@ import * as orderRepository from '../repositories/order.repository'
 
 import { pusher } from '../config/server'
 import { notifyNewOrder, notifyUpdateOrderStatus } from '../events'
-import { isObjectIdOrHexString } from 'mongoose'
+import { isObjectIdOrHexString, ObjectId } from 'mongoose'
 import { IOrder } from '../types/shop/order.type'
 
 export const updateOrderStatus = async (req: Request, res: Response) => {
@@ -25,7 +25,10 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
 
 export const getOrderById = async (req: Request, res: Response) => {
   const { shopId = '', orderId = '' } = req.params
-  const response = await orderRepository.getOrderById(shopId, orderId)
+  const response = await orderRepository.getOrderById(
+    shopId as unknown as ObjectId,
+    orderId as unknown as ObjectId
+  )
 
   if (!response.data) {
     return res.status(404).json({
@@ -63,7 +66,10 @@ export const getClientOrders = async (req: Request, res: Response) => {
       message: 'Erro ao buscar o histórico de pedidos',
     })
 
-  const response = await orderRepository.getClientOrders(shopId, clientId)
+  const response = await orderRepository.getClientOrders(
+    shopId as unknown as ObjectId,
+    clientId as unknown as ObjectId
+  )
   console.log(response.data)
 
   res.status(200).json({

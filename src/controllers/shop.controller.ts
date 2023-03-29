@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import * as shopRepository from '../repositories/shop.repository'
 import * as orderRepository from '../repositories/order.repository'
-import * as orderController from '../controllers/order.controller'
 
 import { IShopSettings } from '../types/shop/settings.type'
 import { ObjectId } from 'mongoose'

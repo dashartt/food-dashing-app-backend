@@ -16,9 +16,9 @@ export const notifyUpdateOrderStatus = (status: string, orderId: string) => {
     .publishToInterests(['update-order-status'], {
       web: {
         notification: {
-          title: `[Macaco Louco Pizzaria] Status do pedido`,
+          title: `Status do pedido`,
           body: getMessageByStatus(status),
-          deep_link: `https://macacoloucopizzaria.vercel.app/order/${orderId}`,
+          // deep_link: `https://fooddashingapp.vercel.app/order/${orderId}`,
         },
       },
     })
@@ -35,8 +35,8 @@ export const notifyNewOrder = () => {
     .publishToInterests(['new-order'], {
       web: {
         notification: {
-          title: `[Macaco Louco Pizzaria] Novo pedido!`,
-          deep_link: `https://macacoloucopizzaria.vercel.app/admin/orders/to-do`,
+          title: `Novo pedido!`,
+          // deep_link: `https://fooddashingapp.vercel.app/admin/orders/to-do`,
         },
       },
     })

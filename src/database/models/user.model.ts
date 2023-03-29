@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { model } from 'mongoose'
 import { IUser } from '../../types/user.type'
 import { userSchema } from '../schemas'
 

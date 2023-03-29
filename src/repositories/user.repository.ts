@@ -1,6 +1,5 @@
 import { ObjectId } from 'mongoose'
 import UserModel from '../database/models/user.model'
-import { IAddress } from '../types/address.type'
 import { ICredential, IUser } from '../types/user.type'
 
 export const signup = async (account: IUser) =>
