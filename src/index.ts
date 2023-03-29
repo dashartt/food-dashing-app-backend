@@ -6,15 +6,15 @@ const PORT = parseInt(process.env.PORT as string) as number
 
 database
   .then(() => {
-    console.log('\x1b[33m%s\x1b[0m', `=> Database connected`)
+    console.log(`\n\n=======> Database connected\n\n`)
 
     server.listen(PORT, () => {
-      console.log('\x1b[33m%s\x1b[0m', `=> Server running on the port: ${PORT}`)
+      console.log(`=======> Server running on the port: ${PORT}\n\n`)
     })
   })
   .catch((error) => {
-    console.log('\x1b[33m%s\x1b[0m', error)
-    console.log('\x1b[33m%s\x1b[0m', `=> Database not connected`)
-    console.log('\x1b[33m%s\x1b[0m', `=> Server will close`)
+    console.log(error, '\n\n')
+    console.log(`=======> Database not connected\n\n`)
+    console.log(`=======> Server will close\n\n`)
     process.exit(1)
   })
