@@ -61,9 +61,9 @@ export const findShopById = async (shopId: string) =>
 
 export const addShop = async (data: Partial<IShopSettings>) =>
   ShopModel.create({
-    owner: data.owner,
+    owner: data.owner?._id,
     shopName: data.shopName,
-    shopAddress: data.shopAddress?._id,
+    shopAddress: data.shopAddress,
     shopOpeningHours: data.shopOpeningHours,
   })
     .then((data) => ({ data }))
