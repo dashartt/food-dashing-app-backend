@@ -72,13 +72,26 @@ export const addShop = async (data: Partial<IShopSettings>) =>
       return { data: null }
     })
 
+export const getAllPlatformShops = async () =>
+  ShopModel.find()
+    .populate('shopAddress')
+    .select('shopName shopAddress')
+    .then((data) => ({ data }))
+    .catch((e) => {
+      console.log(e)
+      return { data: null }
+    })
+
 export const getShopsByOwner = async (ownerId: string) =>
   ShopModel.find({
     owner: ownerId,
   })
     .populate('shopAddress')
     .then((data) => ({ data }))
-    .catch(() => ({ data: null }))
+    .catch((e) => {
+      console.log(e)
+      return { data: null }
+    })
 
 type SaveSettingsParams = {
   shopId: string

@@ -80,6 +80,14 @@ export const getRootHandler = async (req: Request, res: Response) => {
       message: 'Pedido encontrado',
     })
   }
+  if (query?.allPlatformShops === 'true') {
+    const response = await shopRepository.getAllPlatformShops()
+
+    return res.status(200).json({
+      data: response.data,
+      message: 'Sucesso ao buscar as lojas da plataforma',
+    })
+  }
   if (query?.shopName) {
     const shopExist = await shopRepository.findShopByName(
       query?.shopName as string
