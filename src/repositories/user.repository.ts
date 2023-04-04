@@ -15,8 +15,14 @@ export const signin = async ({ email, password }: ICredential) =>
     .catch(() => ({ data: null }))
 
 export const update = async (userId: ObjectId, data: Partial<IUser>) =>
-  UserModel.findByIdAndUpdate(userId, {
-    ...data,
-  })
+  UserModel.findByIdAndUpdate(
+    userId,
+    {
+      ...data,
+    },
+    {
+      new: true,
+    }
+  )
     .then((data) => ({ data: data }))
     .catch(() => ({ data: null }))
